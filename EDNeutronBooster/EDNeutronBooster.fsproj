@@ -47,8 +47,8 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EDNeutronBooster.fs" />
-    <None Include="App.config" />
+    <None Include="astar.fsx" />
+    <None Include="Test.fsx" />
     <None Include="paket.references" />
   </ItemGroup>
   <PropertyGroup>
