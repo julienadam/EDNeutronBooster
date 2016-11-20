@@ -47,7 +47,6 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="astar.fsx" />
     <None Include="Test.fsx" />
     <None Include="paket.references" />
   </ItemGroup>
