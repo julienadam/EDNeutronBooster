@@ -108,40 +108,13 @@ let rec findPath currentLocation goal steps jumpRange currentRange=
             let (best, _, distanceToConsideredSystem) = systemsOnPathAndInRange.Head
             findPath best goal (steps @ [(best, distanceToConsideredSystem)]) jumpRange jumpRange
 
-findPath (sol) (CG) [(sol, 0m)] range range
-// findPath (allSystemsConsidered.[0]) (allSystemsConsidered.[3]) [(allSystemsConsidered.[0], 0m)] range range
+let pathFound = findPath (sol) (CG) [(sol, 0m)] range range
+let totalDistance = pathFound |> Seq.sumBy (fun (_,d) -> d)
+let distanceFromStartToGoal = dist sol.Location CG.Location
+let numSteps = pathFound |> List.length
+let theoreticalShortestSteps = distanceFromStartToGoal / range
 
-
-
-let allPointsById = allSystemsConsidered |> List.map (fun sys -> (sys.Id, sys)) |> Map.ofList 
-// Build a graph of each star to the x other stars that are 1. Closest to the target 2. Minimum 3 times the jump aways
-let neighboursById = 
-    allSystemsConsidered
-    |> Seq.map (fun sys -> 
-        let found = new Dictionary<int, decimal>()
-        for otherSys in systemsInSphere do
-            let distThisOther = dist otherSys.Location sys.Location
-            if otherSys.Id <> sys.Id && distThisOther > 100m && distThisOther < 250m then
-                found.Add(otherSys.Id, dist sys.Location otherSys.Location)
-        (sys.Id, found) 
-        )
-    |> Map.ofSeq
-
-type PathingNode = { System:SystemInfo; g:float } //g = cost of path so far
-let findNeighbours node =
-    match neighboursById.TryFind node.System.Id with
-    | Some x -> x |> Seq.map (fun kvp -> { System = allPointsById.[kvp.Key]; g = node.g + (float) kvp.Value }) |> List.ofSeq
-    | None -> List.empty
-
-// Find a path
-let start = { System = sol; g = 0. }
-
-findNeighbours start
-
-#load "astar.fsx"
-let pathFound = AStar.aStar (fun n -> n.System.Id) (fun n -> n.g) (fun n -> (float) (dist CG.Location n.System.Location)) findNeighbours CG.Id start [{System = sol; g = (float) (dist sol.Location CG.Location) }] List.empty
-
-
+let stepsOutOfSingleJumpRange = pathFound |> List.filter (fun (_,d) -> d > range)
 
 // Plot everything in a nice 3d graph
 
@@ -151,7 +124,8 @@ let x1 = allSystemsConsidered |> Seq.map (fun sys -> (double) sys.Location.X) |>
 let y1 = allSystemsConsidered |> Seq.map (fun sys -> (double) sys.Location.Y) |> Seq.toArray
 let z1 = allSystemsConsidered |> Seq.map (fun sys -> (double) sys.Location.Z) |> Seq.toArray
 let text = allSystemsConsidered |> Seq.map (fun sys -> sys.Name) |> Seq.toArray
-let trace1 =
+
+let traceAllNeutronStars =
     Scatter3d(
         x = x1,
         y = y1,
@@ -169,35 +143,31 @@ let trace1 =
                     ),
                 opacity = 0.8
             )
-    )
+   )
 
-
-// let sol = (0m,0m,0m)
-// let eafots = (-5805.78125m, 129.875m, -5969.875m)
-
-let trace2 =
+let xPath = pathFound |> Seq.map (fun (s,_) -> (float)s.Location.X) |> Seq.toArray
+let yPath = pathFound |> Seq.map (fun (s,_) -> (float)s.Location.Y) |> Seq.toArray
+let zPath = pathFound |> Seq.map (fun (s,_) -> (float)s.Location.Z) |> Seq.toArray
+let textPath = pathFound |> Seq.map (fun (s,_) -> s.Name) |> Seq.toArray
+let tracePath =
     Scatter3d(
-        x = [|0., -5805.78125|],
-        y = [|0., 129.875|],
-        z = [|0., -5969.875|],
-        text = [|"sol", "eafots"|],
-        mode = "markers",
-        marker =
-            Marker(
-                size = 20,
-                symbol = "circle",
-                line =
-                    Line(
-                        color = "rgba(217, 0, 0, 0.14)",
-                        width = 0.5
-                    ),
-                opacity = 0.8
+        x = xPath,
+        y = yPath,
+        z = zPath,
+        text = textPath,
+        mode = "lines",
+        line =
+            Line(
+                color = "#FF0000",
+                width = 2.
             )
     )
 
-[trace2; trace1]
+[traceAllNeutronStars; tracePath ]
     |> Chart.Plot
     |> Chart.WithWidth 1800
     |> Chart.WithHeight 1000
+    |> Chart.WithLegend(true)
+    |> Chart.WithLabels(["Neutron stars"; "Path"])
     |> Chart.Show
 // Use A* to plot a course
