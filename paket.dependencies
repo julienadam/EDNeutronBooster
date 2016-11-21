@@ -3,3 +3,5 @@ nuget FAKE
 nuget FSharp.Data
 nuget Newtonsoft.Json
 nuget XPlot.Plotly
+nuget FSharp.ViewModule.Core
+nuget FsXaml.Wpf

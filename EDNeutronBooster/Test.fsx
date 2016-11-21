@@ -1,5 +1,5 @@
 ﻿#load @"../paket-files/include-scripts/net45/include.main.group.fsx"
-#r @"bin/debug/EDNeutronBooster.exe"
+#r @"bin/debug/EDNeutronBooster.dll"
 
 open SystemInfo
 open Geometry
