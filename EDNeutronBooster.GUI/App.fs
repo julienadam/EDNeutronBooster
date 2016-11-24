@@ -1,12 +1,13 @@
 ﻿module MainApp
 
 open System
-open System.Windows
+open FsXaml
 
-// Create the View and bind it to the View Model
-let mainWindowViewModel = Application.LoadComponent(new System.Uri("/App;component/mainwindow.xaml", UriKind.Relative)) :?> Window
+type App = XAML<"App.xaml">
+type Res = XAML<"ApplicationResources.xaml">
 
-// Application Entry point
 [<STAThread>]
 [<EntryPoint>]
-let main(_) = (new Application()).Run(mainWindowViewModel)
+let main argv =
+    let app = App();
+    app.Run()

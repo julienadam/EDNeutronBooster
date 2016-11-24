@@ -61,13 +61,14 @@
   </Target>
   -->
   <ItemGroup>
+    <None Include="Test.fsx" />
     <None Include="paket.references" />
     <Compile Include="Geometry.fs" />
     <Compile Include="SystemInfo.fs" />
     <Compile Include="NeutronStarDatabase.fs" />
     <Compile Include="Plotting.fs" />
     <Compile Include="PathFinding.fs" />
-    <None Include="Test.fsx" />
+    <Compile Include="Octree.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

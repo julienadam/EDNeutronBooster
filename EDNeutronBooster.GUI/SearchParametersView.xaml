@@ -5,8 +5,6 @@
     xmlns:fsxaml="clr-namespace:FsXaml;assembly=FsXaml.Wpf"
     xmlns:local="clr-namespace:Views;assembly=EDNeutronBooster.GUI"
     xmlns:viewModels="clr-namespace:ViewModels;assembly=EDNeutronBooster.GUI"
-    xmlns:converters="clr-namespace:Converters;assembly=EDNeutronBooster.GUI"
-    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
     MinHeight="200" MinWidth="250" Height="Auto" Width="Auto">
 
     <UserControl.DataContext>
@@ -17,29 +15,29 @@
         <TextBox Height="20" Margin="5,5,5,0">Start</TextBox>
         <DockPanel HorizontalAlignment="Right" VerticalAlignment="Stretch" LastChildFill="False" >
             <Label Margin="5,5,0,5">X</Label>
-            <TextBox Name="txtStartX" Height="20" Width="60" >0.0</TextBox>
+            <TextBox Name="txtStartX" Height="20" Width="60" Text="{Binding StartX}"></TextBox>
             <Label Margin="0,5,0,0">Y</Label>
-            <TextBox Name="txtStartY" Height="20" Width="60">0.0</TextBox>
+            <TextBox Name="txtStartY" Height="20" Width="60" Text="{Binding StartY}"></TextBox>
             <Label Margin="0,5,0,0">Z</Label>
-            <TextBox Name="txtStartZ" Height="20" Width="60" Margin="0,0,5,0">0.0</TextBox>
+            <TextBox Name="txtStartZ" Height="20" Width="60" Margin="0,0,5,0" Text="{Binding StartZ}"></TextBox>
         </DockPanel>
         <TextBox Height="20" Margin="5,0,5,0">Goal</TextBox>
         <DockPanel HorizontalAlignment="Right" VerticalAlignment="Stretch" LastChildFill="False">
             <Label Margin="5,5,0,5">X</Label>
-            <TextBox Name="txtGoalX" Height="20" Width="60" >0.0</TextBox>
+            <TextBox Name="txtGoalX" Height="20" Width="60" Text="{Binding GoalX}"></TextBox>
             <Label Margin="0,5,0,0">Y</Label>
-            <TextBox Name="txtGoalY" Height="20" Width="60">0.0</TextBox>
+            <TextBox Name="txtGoalY" Height="20" Width="60" Text="{Binding GoalY}"></TextBox>
             <Label Margin="0,5,0,0">Z</Label>
-            <TextBox Name="txtGoalZ" Height="20" Width="60" Margin="0,0,5,0">0.0</TextBox>
+            <TextBox Name="txtGoalZ" Height="20" Width="60" Text="{Binding GoalZ}"></TextBox>
         </DockPanel>
         <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LastChildFill="True">
             <Label Margin="5" Width="120">Jump range :</Label>
-            <TextBox Name="txtJumpRange" Height="20" Margin="5" >57.1</TextBox>
+            <TextBox Name="txtJumpRange" Height="20" Margin="5" Text="{Binding JumpRange}"></TextBox>
         </DockPanel>
         <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LastChildFill="True">
             <Label Margin="5" Width="120">Max dist from star :</Label>
-            <TextBox Name="txtMaxDistFromStar" Height="20" Margin="5">100</TextBox>
+            <TextBox Name="txtMaxDistFromStar" Height="20" Margin="5" Text="{Binding MaxDistFromStar}"></TextBox>
         </DockPanel>
-        <Button Name="btnFindNeutronHightWay" Height="20" Margin="10">Find neutron highway</Button>
+        <Button Name="btnFindNeutronHightWay" Command="{Binding OkCommand}" CommandParameter="" Height="20" Margin="10">Find neutron highway</Button>
     </StackPanel>
 </UserControl>
