@@ -1,13 +1,7 @@
 ﻿namespace ViewModels
 
-open System
 open System.Windows
-open System.Windows.Input
-
-open FsXaml
-
 open FSharp.ViewModule
-open FSharp.ViewModule.Validation
 
 type SearchParametersViewModel() as self =
     inherit ViewModelBase()
@@ -25,10 +19,9 @@ type SearchParametersViewModel() as self =
         printfn "%A" x
         true
 
-    let okCommand =
+    let calculatePathCommand =
         self.Factory.CommandSyncParamChecked(
-            (fun _ ->
-                MessageBox.Show(sprintf "startX : %f" startX.Value) |> ignore),
+            ignore,
             isCommandActive,
             [
                 <@ self.StartX @>; <@ self.StartY @>; <@ self.StartZ @>
@@ -48,4 +41,4 @@ type SearchParametersViewModel() as self =
     member x.GoalZ with get() = goalZ.Value and set value = goalZ.Value <- value
     member x.JumpRange with get() = jumpRange.Value and set value = jumpRange.Value <- value
     member x.MaxDistFromStar with get() = maxDistFromStar.Value and set value = maxDistFromStar.Value <- value
-    member x.OkCommand = okCommand
+    member x.CalculatePathCommand = calculatePathCommand

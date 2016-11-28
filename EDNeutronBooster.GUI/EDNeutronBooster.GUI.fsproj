@@ -64,10 +64,8 @@
     <Compile Include="SearchParametersViewModel.fs" />
     <Resource Include="SearchParametersView.xaml" />
     <Compile Include="SearchParametersView.fs" />
-    <Resource Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Resource>
+    <Compile Include="MainViewModel.fs" />
+    <Resource Include="MainWindow.xaml" />
     <Compile Include="MainWindow.fs" />
     <Resource Include="App.xaml" />
     <Compile Include="App.fs" />

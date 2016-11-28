@@ -13,6 +13,8 @@ type BodyDescription = JsonProvider< @"{""id"":1497,""created_at"":1466612947,""
 let inline (+/) path1 path2 = Path.Combine(path1, path2)
 let localAppData = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData) +/ "EDNeutronBooster"
 let neutronStarDatabasePath = localAppData +/ "neutron_star_systems.jsonl"
+let eddbBodiesFile = localAppData +/ "bodies.jsonl"
+let eddbSystemsFile = localAppData +/ "systems.csv"
 
 let getSystemsWithNeutronStarAndDistanceFromMainStar eddbBodiesFile = 
     System.IO.File.ReadLines(eddbBodiesFile) 
@@ -21,10 +23,10 @@ let getSystemsWithNeutronStarAndDistanceFromMainStar eddbBodiesFile =
         match parsed.TypeName.JsonValue with
         | JsonValue.String("Neutron star") -> 
             if parsed.IsMainStar.JsonValue = JsonValue.Boolean(true) then
-                Some(parsed.Id, 0m)
+                Some(parsed.SystemId, 0m)
             else
                 match parsed.DistanceToArrival.JsonValue with
-                | JsonValue.Number d -> Some(parsed.Id, d)
+                | JsonValue.Number d -> Some(parsed.SystemId, d)
                 | _ -> None
         | _ -> None)
     |> Map.ofSeq
@@ -36,6 +38,9 @@ let getRelevantSystemDetails neutronSystems eddbSystemsFile =
             // old school CSV "parsing" yay ! (could have used something better but hey it works ... (most of the time :)
             let split = line.Split(',')
             let id = System.Int32.Parse(split.[0])
+            if id = 454851 then
+                printfn "foo"
+
             match neutronSystems |> Map.tryFind id with
             | Some(s) ->
                 Some(
@@ -61,7 +66,17 @@ let readDatabase () =
     |> Seq.map (fun l -> Newtonsoft.Json.JsonConvert.DeserializeObject<SystemInfo>(l))
     |> List.ofSeq
 
-let getOrBuildNeutronStarDatabase eddbBodiesFile eddbSystemsFile =
+let getOrBuildNeutronStarDatabase () =
+    if not (File.Exists eddbBodiesFile) then
+        let wc = new System.Net.WebClient()
+        printfn "Downloading bodies file from EDDB.io"
+        wc.DownloadFile("https://eddb.io/archive/v5/bodies.jsonl", eddbBodiesFile)
+
+    if not (File.Exists eddbSystemsFile) then
+        let wc = new System.Net.WebClient()
+        printfn "Downloading systems file from EDDB.io"
+        wc.DownloadFile("https://eddb.io/archive/v5/systems.csv", eddbSystemsFile)
+
     if not (File.Exists neutronStarDatabasePath) then
         let neutronSystems = getSystemsWithNeutronStarAndDistanceFromMainStar eddbBodiesFile
 
